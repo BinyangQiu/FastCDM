@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./lib/katex.min.css" />
+    <script src="./lib/katex.min.js"></script>
+    <script src="./lib/auto-render.min.js"></script>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      #container {
+        width: 100vw;
+      }
+      .screenshot {
+        margin: 5px;
+        display: inline-block;
+        white-space: pre-wrap;
+        word-break: break-all;
+        font-size: 30px;
+      }
+      .annotated {
+        border: 1px solid red;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container"></div>
+
+    <script>
+      const FIXED_FONT =
+        "'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'WenQuanYi Micro Hei', sans-serif";
+
+      function render(texts, show_rect = false) {
+        const container = document.getElementById('container');
+        container.innerHTML = '';
+
+        for (let i = 0; i < texts.length; i++) {
+          const div = document.createElement('div');
+          div.className = `screenshot${show_rect ? ' annotated' : ''}`;
+          div.style.fontFamily = FIXED_FONT; // 应用系统字体
+          const lineHeight = 1.2;
+          div.style.lineHeight = lineHeight + 'em';
+          div.style.fontSize = '30px';
+          div.textContent = texts[i];
+          container.appendChild(div);
+        }
+
+        renderMathInElement(container, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$', right: '$', display: false },
+          ],
+          throwOnError: false,
+          maxExpand: 20000,
+          trust: true, 
+          strict: false 
+        });
+        document.body.classList.add('rendering-complete');
+      }
+    </script>
+  </body>
+</html>

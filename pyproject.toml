@@ -1,0 +1,60 @@
+[build-system]
+requires = ["setuptools>=66,<71", "wheel", "packaging>=22"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fastcdm"
+dynamic = ["version"]
+description = "Fast CDM utilities for LaTeX tokenization, rendering, and matching"
+readme = "README.md"
+requires-python = ">=3.8"
+authors = [{ name = "KevinQiu" }]
+license = { file = "LICENSE" }
+classifiers = [
+  "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.8",
+]
+dependencies = [
+  "numpy>=1.20",
+  "opencv-python>=4.5",
+  "selenium>=4",
+  "webdriver-manager>=4",
+  "scikit-image",
+  "gradio",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=7",
+  "black>=23",
+  "ruff>=0.1",
+  "mypy>=1.5",
+  "twine",
+]
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.dynamic]
+version = { attr = "fastcdm.__version__" }
+
+[tool.setuptools.packages.find]
+namespaces = true
+include = ["fastcdm*"]
+
+[tool.setuptools.package-data]
+fastcdm = [
+  "render/templates/*.html",
+  "render/templates/lib/*.js",
+  "render/templates/lib/*.css",
+  "render/templates/lib/katex_fonts/*",
+  "tokenize_latex/*.js",
+  "tokenize_latex/third_party/**/*.js",
+  "tokenize_latex/third_party/**/*.css",
+  "tokenize_latex/third_party/**/*.html",
+  "tokenize_latex/third_party/**/*.ttf",
+  "tokenize_latex/third_party/**/*.woff",
+  "tokenize_latex/third_party/**/*.woff2",
+]
