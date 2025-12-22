@@ -15,6 +15,9 @@ from typing import List, Tuple
 from pathlib import Path
 from skimage.measure import ransac
 import traceback
+import subprocess
+import shutil
+import os
 
 root_dir = Path(__file__).parent
 TEMPLATE_FILE = root_dir / "render" / "templates" / "formula.html"
@@ -209,8 +212,41 @@ def postprocess(
 class FastCDM:
     def __init__(self, chromedriver: str = None) -> None:
         self.chromedriver = chromedriver
+        self.check_environment()
         self.render_worker = None
         self.init_render_worker()
+
+    def check_environment(self) -> None:
+        """
+        检查运行环境是否准备就绪。
+        1. Node.js 环境是否安装。
+        2. ChromeDriver 是否可用。
+        """
+        # 1. 检查 Node.js
+        node_path = shutil.which("node")
+        if not node_path:
+            raise RuntimeError(
+                "Node.js is not found. Please install Node.js for formula normalization. "
+                "Visit https://nodejs.org/ to install it."
+            )
+
+        try:
+            subprocess.check_output(["node", "--version"], text=True)
+        except Exception as e:
+            raise RuntimeError(f"Node.js is found but failed to execute: {e}")
+
+        # 2. 检查 ChromeDriver
+        if self.chromedriver:
+            if not os.path.exists(self.chromedriver):
+                raise FileNotFoundError(f"Specified ChromeDriver not found at: {self.chromedriver}")
+        else:
+            chromedriver_path = shutil.which("chromedriver")
+            if not chromedriver_path:
+                raise RuntimeError(
+                    "ChromeDriver not found in PATH and no path was specified. "
+                    "Please install ChromeDriver or provide the path via the 'chromedriver' parameter. "
+                    "You can also use 'scripts/auto_install_chromedriver.py' to download it."
+                )
 
     def init_render_worker(self) -> None:
         try:
@@ -222,7 +258,7 @@ class FastCDM:
         except Exception as e:
             print("Failed to init RenderWorker:")
             print("=" * 30)
-            print(traceback.format_exc(e))
+            print(traceback.format_exc())
             return None
 
     def render(self, latex_list: list) -> list:
