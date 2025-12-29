@@ -28,15 +28,18 @@ def compute_fastcdm(gt: str, pred: str):
 
     driver_path = str(CHROMEDRIVER_PATH) if CHROMEDRIVER_PATH.exists() else None
     fastcdm = FastCDM(chromedriver=driver_path)
-    f1, recall, precision, vis_img = fastcdm.compute(gt, pred, visualize=True)
+    try:
+        f1, recall, precision, vis_img = fastcdm.compute(gt, pred, visualize=True)
 
-    if vis_img is not None:
-        vis_rgb = cv2.cvtColor(vis_img, cv2.COLOR_BGR2RGB)
-    else:
-        vis_rgb = None
+        if vis_img is not None:
+            vis_rgb = cv2.cvtColor(vis_img, cv2.COLOR_BGR2RGB)
+        else:
+            vis_rgb = None
 
-    metrics_md = f"**CDM得分(F1)**: {f1:.4f}  \n**召回率**: {recall:.4f}  \n**准确率**: {precision:.4f}"
-    return metrics_md, vis_rgb
+        metrics_md = f"**CDM得分(F1)**: {f1:.4f}  \n**召回率**: {recall:.4f}  \n**准确率**: {precision:.4f}"
+        return metrics_md, vis_rgb
+    finally:
+        fastcdm.close()
 
 
 with gr.Blocks(title="FastCDM 可视化") as demo:

@@ -56,6 +56,10 @@ You can check KaTeX's support coverage here: 🔗 [KaTeX Support Table](https://
 
 ### Installation
 
+You need to install `node.js` and `chromedriver` in advance.
+* For `node.js` installation, please refer to [here](https://nodejs.org/).
+* For `chromedriver` installation, please refer to [here](docs/chromedriver_installation.md).
+
 ```bash
 pip install fastcdm
 ```

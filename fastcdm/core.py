@@ -261,6 +261,14 @@ class FastCDM:
             print(traceback.format_exc())
             return None
 
+    def close(self):
+        if self.render_worker:
+            self.render_worker.close()
+            self.render_worker = None
+
+    def __del__(self):
+        self.close()
+
     def render(self, latex_list: list) -> list:
         """
         渲染 LaTeX 表达式列表。
